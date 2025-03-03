@@ -76,7 +76,7 @@ class Library {
             console.log(book.getDetails());
         });
     }
-
+//task 4
     lendBook(borrowerId, isbn) {
         const book = this.books.find((b) => b.isbn === isbn);   //finds the book using ISBN
         if (!book) {
@@ -105,6 +105,38 @@ class Library {
 
         console.log(`Book "${book.title}" successfully lent to ${borrower.name}.`);
     }
+//task 5
+    returnBook(borrowerId, isbn) {
+        // Find the book by ISBN
+        const book = this.books.find((b) => b.isbn === isbn);
+        if (!book) {
+        console.log(`Book with ISBN ${isbn} not found.`);
+        return;
+        }
+
+        // Find the borrower by borrowerId
+        const borrower = this.borrowers.find((b) => b.borrowerId === borrowerId);
+        if (!borrower) {
+        console.log(`Borrower with ID ${borrowerId} not found.`);
+        return;
+        }
+
+        // Check if the borrower has the book in their borrowedBooks list
+        const bookIndex = borrower.borrowedBooks.indexOf(book.title);
+        if (bookIndex === -1) {
+        console.log(`Borrower ${borrower.name} does not have book "${book.title}".`);
+        return;
+        }
+
+        // Increase the book's copies by 1
+        book.updateCopies(1);
+
+        // Remove the book from the borrower's borrowedBooks list
+        borrower.returnBook(book.title);
+
+        console.log(`Book "${book.title}" successfully returned by ${borrower.name}.`);
+        }
+
 }
 const myLibrary = new Library();    //creates instance of Library class
 myLibrary.addBook(book1);   //added book to array
@@ -118,3 +150,12 @@ console.log(book1.getDetails());
 // Expected output: "Title: The Great Gatsby, Author: F. Scott Fitzgerald, ISBN: 123456, Copies: 3"
 console.log(borrower1.borrowedBooks);
 // Expected output: ["The Great Gatsby"]
+
+//Task 5: Implementing Book Returns
+console.log("Task 5: Implementing Book Returns")
+
+myLibrary.returnBook(201, 123456);
+console.log(book1.getDetails());
+// Expected output: "Title: The Great Gatsby, Author: F. Scott Fitzgerald, ISBN: 123456, Copies: 4"
+console.log(borrower1.borrowedBooks);
+// Expected output: []
