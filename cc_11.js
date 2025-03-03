@@ -76,7 +76,45 @@ class Library {
             console.log(book.getDetails());
         });
     }
+
+    lendBook(borrowerId, isbn) {
+        const book = this.books.find((b) => b.isbn === isbn);   //finds the book using ISBN
+        if (!book) {
+            console.log(`Book with ISBN ${isbn} not found.`);
+            return;
+        }
+
+        // Check if the book has available copies
+        if (book.copies < 1) {
+            console.log(`No copies available for book "${book.title}".`);
+            return;
+        }
+
+        // Find the borrower by borrowerId
+        const borrower = this.borrowers.find((b) => b.borrowerId === borrowerId);
+        if (!borrower) {
+            console.log(`Borrower with ID ${borrowerId} not found.`);
+            return;
+        }
+
+        // Reduce the book's copies by 1
+        book.updateCopies(-1);
+
+        // Add the book title to the borrower's borrowedBooks list
+        borrower.borrowBook(book.title);
+
+        console.log(`Book "${book.title}" successfully lent to ${borrower.name}.`);
+    }
 }
 const myLibrary = new Library();    //creates instance of Library class
 myLibrary.addBook(book1);   //added book to array
 myLibrary.listBooks();  //lists books in array
+
+//Task 4: Implementing Book Borrowing
+console.log("Task 4: Implementing Book Borrowing")
+myLibrary.borrowers.push(borrower1);
+myLibrary.lendBook(201, 123456);
+console.log(book1.getDetails());
+// Expected output: "Title: The Great Gatsby, Author: F. Scott Fitzgerald, ISBN: 123456, Copies: 3"
+console.log(borrower1.borrowedBooks);
+// Expected output: ["The Great Gatsby"]
